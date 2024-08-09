@@ -1,0 +1,67 @@
+<!-- applicationContext.xml -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define the BookRepository bean -->
+    <bean id="bookRepository" class="com.example.repository.BookRepository">
+    </bean>
+
+    <!-- Define the BookService bean and inject the BookRepository bean -->
+    <bean id="bookService" class="com.example.service.BookService">
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+</beans>
+
+
+package com.example.service;
+
+import com.example.repository.BookRepository;
+
+public class BookService {
+
+    private BookRepository bookRepository;
+
+    // Setter method for dependency injection
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    // Other methods for BookService
+    public void performService() {
+        // Example service method using bookRepository
+        System.out.println("Performing service with " + bookRepository);
+    }
+}
+
+
+package com.example.repository;
+
+public class BookRepository {
+    // Basic implementation
+    @Override
+    public String toString() {
+        return "BookRepository instance";
+    }
+}
+
+
+package com.example;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.example.service.BookService;
+
+public class LibraryManagementApplication {
+
+    public static void main(String[] args) {
+        // Load the Spring context
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        // Get the BookService bean and perform a service
+        BookService bookService = (BookService) context.getBean("bookService");
+        bookService.performService();
+    }
+}

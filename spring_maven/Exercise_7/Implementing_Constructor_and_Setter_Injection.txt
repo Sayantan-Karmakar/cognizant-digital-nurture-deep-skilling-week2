@@ -1,0 +1,76 @@
+package com.example.library;
+
+public class BookService {
+    private final BookRepository bookRepository; // Constructor Injection
+    private BookRepository bookRepositorySetter; // Setter Injection
+
+    // Constructor Injection
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    // Setter Injection
+    public void setBookRepository(BookRepository bookRepositorySetter) {
+        this.bookRepositorySetter = bookRepositorySetter;
+    }
+
+    // Other methods
+    public void someServiceMethod() {
+        // Use bookRepository and bookRepositorySetter
+    }
+}
+
+
+package com.example.library;
+
+public class BookRepository {
+    // Repository methods and properties
+}
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define BookRepository Bean -->
+    <bean id="bookRepository" class="com.example.library.BookRepository">
+        <!-- Configure any properties if needed -->
+    </bean>
+
+    <!-- Define BookService Bean with Constructor Injection -->
+    <bean id="bookService" class="com.example.library.BookService">
+        <constructor-arg ref="bookRepository" />
+    </bean>
+
+    <!-- Define BookService Bean with Setter Injection -->
+    <bean id="bookServiceSetter" class="com.example.library.BookService">
+        <property name="bookRepositorySetter" ref="bookRepository" />
+    </bean>
+
+</beans>
+
+
+package com.example.library;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class LibraryManagementApplication {
+    public static void main(String[] args) {
+        // Load Spring configuration
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        // Get beans from the context to verify injection
+        BookService bookService = (BookService) context.getBean("bookService");
+        BookService bookServiceSetter = (BookService) context.getBean("bookServiceSetter");
+
+        // Verify that both beans are initialized properly
+        System.out.println("BookService with Constructor Injection: " + bookService);
+        System.out.println("BookService with Setter Injection: " + bookServiceSetter);
+
+        // Close the context
+        ((ClassPathXmlApplicationContext) context).close();
+    }
+}

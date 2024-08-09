@@ -1,0 +1,53 @@
+<!-- applicationContext.xml -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Enable component scanning for the com.library package -->
+    <context:component-scan base-package="com.library" />
+
+</beans>
+
+
+package com.library.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class BookService {
+    // Business logic methods
+}
+
+
+package com.library.repository;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class BookRepository {
+    // Data access methods
+}
+
+
+package com.library;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.library.service.BookService;
+import com.library.repository.BookRepository;
+
+public class LibraryManagementApplication {
+    public static void main(String[] args) {
+        // Load the application context
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        // Retrieve beans from the context
+        BookService bookService = context.getBean(BookService.class);
+        BookRepository bookRepository = context.getBean(BookRepository.class);
+
+        // Use the beans to verify that they are correctly wired
+        System.out.println("BookService bean: " + bookService);
+        System.out.println("BookRepository bean: " + bookRepository);
+    }
+}

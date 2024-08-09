@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define BookRepository bean -->
+    <bean id="bookRepository" class="com.example.BookRepository"/>
+    
+    <!-- Define BookService bean and inject BookRepository -->
+    <bean id="bookService" class="com.example.BookService">
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+</beans>
+
+
+package com.example;
+
+public class BookService {
+    private BookRepository bookRepository;
+
+    // Setter method for dependency injection
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public void performService() {
+        System.out.println("Service is performing with " + bookRepository.getRepositoryInfo());
+    }
+}
+
+
+package com.example;
+
+public class BookRepository {
+    public String getRepositoryInfo() {
+        return "Book Repository";
+    }
+}
+
+
+package com.example;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+    public static void main(String[] args) {
+        // Load the Spring context from the XML configuration file
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        
+        // Retrieve the BookService bean from the context
+        BookService bookService = (BookService) context.getBean("bookService");
+        
+        // Use the BookService bean
+        bookService.performService();
+    }
+}
